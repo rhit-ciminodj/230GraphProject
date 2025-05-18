@@ -34,6 +34,37 @@ public class ForTest {
     }
     
     @Test
+    public void testSmallSparseGraph() {
+        PrimsAlgorithm.Graph graph = new PrimsAlgorithm.Graph(5);
+        graph.addEdge(0, 1, 4);
+        graph.addEdge(1, 2, 1);
+        graph.addEdge(2, 3, 3);
+        graph.addEdge(3, 4, 2); // Total of 4 edges = V - 1 (sparse but connected)
+
+        int totalWeight = runPrimAndGetTotalWeight(graph);
+
+        // MST: The graph is already a tree, so all edges are included
+        // Total weight: 4 + 1 + 3 + 2 = 10
+        assertEquals(10, totalWeight);
+    }
+    
+    @Test
+    public void testSmallFullyConnectedGraph() {
+        PrimsAlgorithm.Graph graph = new PrimsAlgorithm.Graph(4);
+        graph.addEdge(0, 1, 1);
+        graph.addEdge(0, 2, 4);
+        graph.addEdge(0, 3, 3);
+        graph.addEdge(1, 2, 2);
+        graph.addEdge(1, 3, 5);
+        graph.addEdge(2, 3, 6);
+
+        int totalWeight = runPrimAndGetTotalWeight(graph);
+
+        // MST: 0-1(1), 1-2(2), 0-3(3) = 6
+        assertEquals(6, totalWeight);
+    }
+    
+    @Test
     public void testTriangleGraph() {
         PrimsAlgorithm.Graph graph = new PrimsAlgorithm.Graph(3);
         graph.addEdge(0, 1, 1);
