@@ -74,6 +74,16 @@ public class PrimsAlgorithm {
 
             return totalWeight;
         }
+        
+        public void printAdjacencyList() {
+            for (int i = 0; i < vertices; i++) {
+                System.out.print("Vertex " + i + ":");
+                for (Edge edge : adjacencyList.get(i)) {
+                    System.out.print(" -> (" + edge.target + ", weight: " + edge.weight + ")");
+                }
+                System.out.println();
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -86,6 +96,7 @@ public class PrimsAlgorithm {
         graph.addEdge(1, 4, 5);
         graph.addEdge(2, 4, 7);
         graph.addEdge(3, 4, 9);
+        graph.printAdjacencyList();
 
         graph.primMSTAndGetWeight();
     }
