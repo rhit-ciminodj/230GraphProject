@@ -2,7 +2,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class ForTest {
 
@@ -122,6 +124,85 @@ public class ForTest {
         }
 
         runPrimAndGetTotalWeight(graph);
+    }
+    
+    @Test(timeout = 10000)
+    public void testChainGraph_10000Nodes_MSTWeightIsCorrect() {
+        int V = 10000;
+        PrimsAlgorithm.Graph graph = new PrimsAlgorithm.Graph(V);
+
+        // Create a chain: 0-1-2-...-9999, each edge weight = 1
+        for (int i = 0; i < V - 1; i++) {
+            graph.addEdge(i, i + 1, 1);
+        }
+
+        int expectedMSTWeight = V - 1; // 9999
+        int actualMSTWeight = graph.primMSTAndGetWeight();
+
+        assertEquals("MST weight should be exactly 9999 for a chain graph of 10000 nodes", expectedMSTWeight, actualMSTWeight);
+    }
+    
+    @Test(timeout = 10000)
+    public void testGridGraph_10000Nodes_MSTWeightIsCorrect() {
+        int rows = 100;
+        int cols = 100;
+        int V = rows * cols;
+        PrimsAlgorithm.Graph graph = new PrimsAlgorithm.Graph(V);
+
+        // Connect grid (right and down only) with weight = 1
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                int current = r * cols + c;
+                // Connect to right neighbor
+                if (c < cols - 1) {
+                    int right = r * cols + (c + 1);
+                    graph.addEdge(current, right, 1);
+                }
+                // Connect to bottom neighbor
+                if (r < rows - 1) {
+                    int down = (r + 1) * cols + c;
+                    graph.addEdge(current, down, 1);
+                }
+            }
+        }
+
+        int expectedMSTWeight = V - 1; // For any connected graph, MST has (V-1) edges
+        int actualMSTWeight = graph.primMSTAndGetWeight();
+
+        assertEquals("MST weight should be 9999 for 100x100 grid with weight 1", expectedMSTWeight, actualMSTWeight);
+    }
+    
+    @Test(timeout = 15000)
+    public void testGridGraph_HorizontalFirst_CorrectMSTWeight() {
+        int rows = 100;
+        int cols = 100;
+        int V = rows * cols;
+        PrimsAlgorithm.Graph graph = new PrimsAlgorithm.Graph(V);
+
+        int weight = 1;
+
+        // Step 1: Add horizontal edges first (left to right)
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols - 1; c++) {
+                int u = r * cols + c;
+                int v = u + 1;
+                graph.addEdge(u, v, weight++);
+            }
+        } // all the horizontal weights are 1,2,3,4,5,6...
+
+        // Step 2: Add vertical edges (top to bottom)
+        for (int r = 0; r < rows - 1; r++) {
+            for (int c = 0; c < cols; c++) {
+                int u = r * cols + c;
+                int v = u + cols;
+                graph.addEdge(u, v, weight++);
+            }
+        }//all the vertical weights are 9901,9902,9903....
+
+        int expectedMSTWeight = 9901*9900/2+(9901+19701)*99/2; // = 1465299   connect all the horizontal edges and connect (0,0), (0,1) (0,2) (0,3) which edges' weights are 9901,10001,10101...
+        int actualMSTWeight = graph.primMSTAndGetWeight();
+
+        assertEquals("Exact MST weight for horizontal-first grid is expected", expectedMSTWeight, actualMSTWeight);
     }
 
     // Utility to generate a sparse or medium-sized graph
