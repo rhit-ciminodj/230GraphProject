@@ -71,9 +71,14 @@ public class PrimsAlgorithm {
                     }
                 }
             }
+            System.out.println("\nEdges in the Minimum Spanning Tree:");
+            for (int i = 1; i < vertices; i++) {
+                System.out.println(parent[i] + " - " + i + " (weight: " + key[i] + ")");
+            }
 
             return totalWeight;
         }
+
         
         public void printAdjacencyList() {
             for (int i = 0; i < vertices; i++) {
@@ -87,17 +92,44 @@ public class PrimsAlgorithm {
     }
 
     public static void main(String[] args) {
-        int V = 5;
+    	System.out.println("Graph 1: small sparse graph");
+        int V = 8;
         Graph graph = new Graph(V);
-        graph.addEdge(0, 1, 2);
-        graph.addEdge(0, 3, 6);
-        graph.addEdge(1, 2, 3);
-        graph.addEdge(1, 3, 8);
-        graph.addEdge(1, 4, 5);
-        graph.addEdge(2, 4, 7);
-        graph.addEdge(3, 4, 9);
+        graph.addEdge(0, 3, 3);
+        graph.addEdge(0, 1, 3);
+        graph.addEdge(0, 4, 7);
+        graph.addEdge(2, 4, 8);
+        graph.addEdge(2, 5, 7);
+        graph.addEdge(2, 6, 6);
+        graph.addEdge(3, 5, 1);
+        graph.addEdge(5, 6, 6);
+        graph.addEdge(5, 7, 6);
+        graph.addEdge(6, 7, 7);
         graph.printAdjacencyList();
 
-        graph.primMSTAndGetWeight();
+        System.out.println("The minimum weight: "+graph.primMSTAndGetWeight());
+        
+        System.out.println("Graph 2: fully connected graph");
+        int V2 = 6;
+        graph = new Graph(V2);
+        graph.addEdge(0, 2, 3);
+        graph.addEdge(0, 4, 5);
+        graph.addEdge(0, 5, 1);
+        graph.addEdge(1, 4, 4);
+        graph.addEdge(1, 5, 8);
+        graph.addEdge(2, 3, 6);
+        graph.addEdge(2, 4, 8);
+        graph.addEdge(4, 5, 10);
+        graph.addEdge(1, 0, 1);
+        graph.addEdge(1, 2, 2);
+        graph.addEdge(2, 5, 5);
+        graph.addEdge(3, 4, 2);
+        graph.addEdge(1, 3, 7);
+        graph.addEdge(3, 5, 6);
+        graph.addEdge(3, 0, 8);
+        graph.printAdjacencyList();
+        System.out.println("The minimum weight: "+graph.primMSTAndGetWeight());
+
+        
     }
 }
